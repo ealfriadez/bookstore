@@ -2,5 +2,18 @@ spring:
   application:
     name: bookstore
 
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bookstore_db
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+
 server:
-  port: 8080
+  port: 8083
+
+
