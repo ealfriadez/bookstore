@@ -32,7 +32,6 @@ public class BookService {
         boolean exists = bookRepository.existsByTitleAndAuthorId(book.getTitle(), authorId);
         book.setAuthor(author);
         if(exists) throw new RuntimeException("El libro ya existe: " + book.getTitle());
-
         return bookRepository.save(book);
     }
 }
