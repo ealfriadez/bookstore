@@ -6,6 +6,7 @@ import pe.edu.unfv.bookstore.model.Book;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BookService {
@@ -29,5 +30,33 @@ public class BookService {
         book.setId(books.size() + 1L);
         books.add(book);
         return book;
+    }
+
+    public boolean delete(Long id){
+        for(Book book : books){
+            if(book.getId().equals(id)){
+                books.remove(book);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Book update(Long id, Book updatedDetails){
+        for(Book book : books){
+            if(book.getId().equals(id)){
+                book.setTitle(updatedDetails.getTitle());
+                book.setAuthor(updatedDetails.getAuthor());
+                book.setPrice(updatedDetails.getPrice());
+                return book;
+            }
+        }
+        return null;
+    }
+
+    public List<Book> searchByAuthor(String author){
+        return books.stream()
+                .filter(book -> book.getAuthor().toLowerCase().contains(author.toLowerCase()))
+                .collect(Collectors.toList());
     }
 }

@@ -6,9 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import pe.edu.unfv.bookstore.model.Book;
 import pe.edu.unfv.bookstore.service.BookService;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController//soportar metodos HTTP como GET, POST, PUT, DELETE
                 //Respuestas en formato JSON
@@ -36,19 +34,14 @@ public class BookController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    /*  //GET /api/books/search?author=Martin -> Buscar por autor (@RequestParam)
+    //GET /api/books/search?author=Martin -> Buscar por autor (@RequestParam)
     @GetMapping("/search")
     public ResponseEntity<List<Book>> searchByAuthor(
             @RequestParam String author
     ){
-        List<Book> booksByAuthor = new ArrayList<>();
-        for (Book book : books) {
-            if (book.getAuthor().contains(author)) {
-                booksByAuthor.add(book);
-            }
-        }
-        return new ResponseEntity<>(booksByAuthor, HttpStatus.OK);
-    } */
+        List<Book> booksFound = bookService.searchByAuthor(author);
+        return new ResponseEntity<>(booksFound, HttpStatus.OK);
+    }
 
      //POST /api/books -> Crear un nuevo libro (@RequestBody)
     @PostMapping
@@ -56,31 +49,22 @@ public class BookController {
         return new ResponseEntity<>(bookService.save(book), HttpStatus.CREATED);
     }
 
-     //PUT /api/books -> Crear un nuevo libro (@RequestBody)
+    //PUT /api/books -> Crear un nuevo libro (@RequestBody)
     @PutMapping("/{id}")
     public ResponseEntity<Book> update(
             @PathVariable Long id,
             @RequestBody Book book) {
-        for (Book b : books){
-            if(b.getId().equals(id)){
-                b.setTitle(book.getTitle());
-                b.setAuthor(book.getAuthor());
-                b.setPrice(book.getPrice());
-                return new ResponseEntity<>(b, HttpStatus.OK);
-            }
+        Book updateBook = bookService.update(id, book);
+        if(updateBook != null) {
+            return new ResponseEntity<>(updateBook, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    /* //DELETE /api/books/{id} -> Eliminar un libro por ID (@PathVariable)
+     //DELETE /api/books/{id} -> Eliminar un libro por ID (@PathVariable)
     @DeleteMapping("/{id}")
     public ResponseEntity<Book> delete(@PathVariable Long id) {
-        for (Book book : books) {
-            if (book.getId().equals(id)) {
-                books.remove(book);
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }*/
+        return bookService.delete(id) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    }
 }
