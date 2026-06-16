@@ -24,8 +24,9 @@ public class BookController {
     //GET /api/books -> Listar todos los libros
     @GetMapping
     public ResponseEntity<List<Book>> getAll() {
-        return new ResponseEntity<>(bookService.getAll(), HttpStatus.OK);
+        return new ResponseEntity<>(bookService.fidAll(), HttpStatus.OK);
     }
+
 
    //GET /api/books/{id} -> Buscar por ID (@PathVariable)
     @GetMapping("/{id}")
@@ -43,13 +44,13 @@ public class BookController {
         return new ResponseEntity<>(booksFound, HttpStatus.OK);
     }
 
-     //POST /api/books -> Crear un nuevo libro (@RequestBody)
+   //POST /api/books -> Crear un nuevo libro (@RequestBody)
     @PostMapping
     public ResponseEntity<Book> save(@RequestBody Book book) {
         return new ResponseEntity<>(bookService.save(book), HttpStatus.CREATED);
     }
 
-    //PUT /api/books -> Crear un nuevo libro (@RequestBody)
+    //PUT /api/books -> Actualizar un libro existente (@RequestBody)
     @PutMapping("/{id}")
     public ResponseEntity<Book> update(
             @PathVariable Long id,
@@ -62,9 +63,9 @@ public class BookController {
         }
     }
 
-     //DELETE /api/books/{id} -> Eliminar un libro por ID (@PathVariable)
+    /* //DELETE /api/books/{id} -> Eliminar un libro por ID (@PathVariable)
     @DeleteMapping("/{id}")
     public ResponseEntity<Book> delete(@PathVariable Long id) {
         return bookService.delete(id) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
-    }
+    }*/
 }
